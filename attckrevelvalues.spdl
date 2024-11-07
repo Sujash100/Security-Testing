@@ -1,0 +1,28 @@
+protocol abc(X,Y){
+role X{
+secret msg: Nonce;
+#var msg1:Nonce;
+send_!1(X,Y,msg);
+#send_3(X,Y,msg);
+send_1(X,Y,{msg}k(X,Y));
+#recv_2(Y,X,{msg1}sk(X,Y));
+
+
+claim(X, Nisynch);
+claim(X, Weakagree);
+claim(X,Niagree);
+}
+
+role Y{
+var msg;
+#fresh msg1: Nonce;
+recv_!1(X,Y,msg);
+#recv_3(X,Y,msg);
+recv_1(X,Y,{msg}k(X,Y));
+send_!2(Y,Y,msg);
+#send_2(Y,X,{msg1}sk(X,Y));
+claim(Y, Nisynch);
+claim(Y, Weakagree);
+claim(Y,Niagree);
+}
+}

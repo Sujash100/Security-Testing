@@ -1,0 +1,35 @@
+hashfunction h;
+usertype SessionKey;
+protocol V2IKeyshare(V,LI)
+	{
+		role V {
+					fresh nizk: Nonce;
+					fresh T1: Nonce;
+					
+					send_1(V,LI,{pk(V),nizk,{nizk}sk(V), T1}k(V,LI));
+					var ek:Nonce;
+					var epi:Nonce;
+					recv_2(LI,V,{pk(LI),ek,h(T1),{pk(V),pk(LI),epi}sk(LI)}k(V,LI));
+					claim(V, Secret, nizk);
+					claim(V, Alive);
+					claim(V, Weakagree);
+					claim(V, Niagree);
+					claim(V, Nisynch);
+				}
+
+		role LI{
+									
+					var nizk: Nonce;
+					var T1:Nonce;
+
+					recv_1(V,LI,{pk(V),nizk,{nizk}sk(V), T1}k(V,LI));
+					fresh ek: Nonce;	
+					fresh epi:Nonce;
+					send_2(LI,V,{pk(LI),ek, h(T1),{pk(V),pk(LI),epi}sk(LI)}k(V,LI));
+					claim(LI, Secret, nizk);
+					claim(LI, Alive);
+					claim(LI, Weakagree);
+					claim(LI, Niagree);
+					claim(LI, Nisynch);
+				}
+	}

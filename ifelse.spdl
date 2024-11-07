@@ -1,0 +1,28 @@
+hashfunction h;
+protocol test(A,B){
+role A {
+fresh m1: Nonce;
+fresh m2;
+fresh m3: Nonce;
+fresh m4;
+var t: Data;
+#recv_1(B,A,{t}k(A,B));
+match(h(m3),h(m3)); /* If this is a match, then send */
+send_2(A,B, m1);
+
+not match(h(m4),m3);/* If they do not match, then send*/
+send_3(A,B, m2);
+claim(A, Secret, m1); /* This test will pass only if A does not manage to successfully send m1*/
+claim(A, Secret,m2); /* This test will pass only if A does not manage to successfully send  m2*/
+}
+role B{
+var m1:Nonce;
+var m2;
+fresh t: Data;
+recv_2(A,B,m1);
+recv_3(A,B,m2);
+#send_1(B,A,{t}k(A,B));
+claim(B, Secret, m1);
+claim(B, Secret, m2);
+}
+}

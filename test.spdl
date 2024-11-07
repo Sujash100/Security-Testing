@@ -1,0 +1,64 @@
+hashfunction h;
+usertype EpochKey;
+usertype EpochInfo;
+usertype Timestamp;
+protocol V2I(Vs,LI)
+	{
+		role Vs {
+					fresh nizk: Nonce;
+					fresh T: Timestamp;
+					
+					send_1(Vs,LI,{pk(Vs),nizk,{nizk}sk(Vs), T}k(Vs,LI));
+					var ek: EpochKey;
+					var epi: EpochInfo;
+					recv_2(LI,Vs,{pk(LI),ek,T,{pk(Vs),pk(LI),epi}sk(LI)}k(Vs,LI));
+					claim(Vs, Secret, nizk);
+					claim(Vs, Alive);
+					claim(Vs, Weakagree);
+					claim(Vs, Niagree);
+					claim(Vs, Nisynch);
+				}
+
+		role LI{
+									
+					var nizk: Nonce;
+					var T: Timestamp;
+
+					recv_1(Vs,LI,{pk(Vs),nizk,{nizk}sk(Vs), T}k(Vs,LI));
+					fresh ek: EpochKey;	
+					fresh epi: EpochInfo;
+					send_2(LI,Vs,{pk(LI),ek, T,{pk(Vs),pk(LI),epi}sk(LI)}k(Vs,LI));
+					claim(LI, Secret, nizk);
+					claim(LI, Alive);
+					claim(LI, Weakagree);
+					claim(LI, Niagree);
+					claim(LI, Nisynch);
+				}
+	}
+
+
+protocol V2V(Vs,Vr)
+
+	{
+
+		role Vs {
+					fresh T2: Timestamp;
+					fresh msg: Nonce;
+					
+					send_1(Vs,Vr,{pk(Vs),msg,{msg, T2, pk(Vs)}sk(Vs), T2}k(Vs,Vr));
+					claim(Vs, Secret, msg);
+					claim(Vs, Niagree);
+					claim(Vs, Nisynch);
+				}
+
+		role Vr {
+					var T2: Timestamp;
+					var msg: Nonce;
+					
+					recv_1(Vs,Vr,{pk(Vs),msg,{msg, T2, pk(Vs)}sk(Vs), T2}k(Vs,Vr));
+					claim(Vr, Secret, msg);
+					claim(Vr, Weakagree);
+					claim(Vr, Niagree);
+					claim(Vr, Nisynch);
+				}
+	}

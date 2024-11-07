@@ -1,0 +1,48 @@
+secret exp: Function;
+
+secret sk2:Function;
+const pk2: Function;
+inversekeys(pk2,sk2);
+
+protocol @symkey(X,Y)
+{
+	role X{
+	var m: Ticket;
+	var Y: Agent;
+	recv_!1(X,X, exp(pk2(X),sk(Y)) );
+	send_!2(X,X, exp(pk(Y),sk2(X)) );
+	}
+	role Y {
+	var X: Agent;
+	var m: Ticket;
+	recv_!3(Y,Y, { m }exp(pk2(X),sk(Y)) );
+	send_!4(Y,Y, { m }exp(pk(Y),sk2(X)) );
+	}
+}
+
+protocol symkey2(S,R)
+{
+role S{
+		fresh  msg: Ticket;
+		send_1(S,R,{msg}exp(pk2(S),sk(R)));
+		}
+role R{
+		var msg: Ticket;
+		recv_1(S,R,{msg}exp(pk2(S),sk(R)));
+
+claim(R, Secret, sk(R));
+		}
+}
+/*
+protocol symkey(S,R)
+{
+role S{
+		fresh  msg: Data;
+		send_1(S,R,{msg}exp(pk(R),sk2(S)));
+		}
+role R{
+		var msg:Data;
+		recv_1(S,R,{msg}exp(pk2(S),sk(R)));
+		}
+}
+*/

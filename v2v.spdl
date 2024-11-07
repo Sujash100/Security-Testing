@@ -1,0 +1,27 @@
+usertype Timestamp;
+
+protocol V2V(Vs,Vr)
+
+	{
+		role Vs {
+					fresh T2: Timestamp;
+					fresh msg: Nonce;
+					
+					send_1(Vs,Vr,{pk(Vs),msg,{msg, T2, pk(Vs), pk(Vr)}sk(Vr), T2}k(Vs,Vr));
+
+					claim(Vs, Weakagree);
+					claim(Vs, Niagree);
+					claim(Vs, Nisynch);
+				}
+
+		role Vr {
+					var T2: Timestamp;
+					var msg: Nonce;
+					
+					recv_1(Vs,Vr,{pk(Vs),msg,{msg, T2, pk(Vs), pk(Vr)}sk(Vr), T2}k(Vs,Vr));
+
+					claim(Vr, Weakagree);
+					claim(Vr, Niagree);
+					claim(Vr, Nisynch);
+				}
+	}

@@ -1,0 +1,15 @@
+
+const pk2: Function;
+secret sk2: Function;
+inversekeys (pk2,sk2);
+
+protocol pub(S,R){
+	role S{
+	fresh msg:Nonce;
+	send_1(S,R,{msg}pk2(S));
+	}
+	role R{
+	var msg: Nonce;
+	recv_1(S,R,{msg}pk2(S));
+	}
+}
